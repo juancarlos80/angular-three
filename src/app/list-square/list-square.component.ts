@@ -24,7 +24,8 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
   //-- Cube Properties
   @Input() public rotationSpeedX: number = 0.01;
   @Input() public rotationSpeedY: number = 0.01;
-  @Input() public texture: string = "/assets/neonFrame.png";
+  //@Input() public texture: string = "/assets/neonFrame.png";
+  @Input() public texture: string = "/assets/neonCircular.png";
   @Input() public textureSel: string = "/assets/neonFrameSel.png";
 
   // Stage Properties
@@ -38,6 +39,10 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
   private renderer!: THREE.WebGLRenderer;
   private controls!: OrbitControls;
   private rayCaster = new THREE.Raycaster();
+
+  private geometryCube = new THREE.BoxGeometry(1, 1, 1);
+  private materialCube = new THREE.MeshLambertMaterial({ color: 0x3d3d3d });
+  private cube : THREE.Mesh = new THREE.Mesh(this.geometryCube, this.materialCube);
 
   private camera!: THREE.PerspectiveCamera;
 
@@ -79,7 +84,7 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       {
         "name": "QAE"
       },
-      /*{
+      {
         "name": "Devops"
       },
       {
@@ -93,7 +98,7 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       },
       {
         "name": "Devops2"
-      }*/
+      }
     ]
   }
 
@@ -117,9 +122,15 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
     let component: ListSquareComponent = this;
     (function render() {      
       requestAnimationFrame(render);
-      //component.animateCube();
+      component.animateCube();
       component.renderer.render(component.scene, component.camera);
     }());
+  }
+
+  private animateCube() {
+    //this.cube.rotation.x += this.rotationSpeedX;
+    this.cube.rotation.y += this.rotationSpeedY;
+    //this.cube.rotation.z += 0.01;
   }
 
   private createControls = () => {
@@ -168,7 +179,9 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
 
       for (let i = 0; i < intersects.length; i++) {      
         //(intersects[i].object as Mesh).material = materialSel;
-        intersects[i].object.scale.set(1.1, 1.1, 1.1);
+        if(intersects[i].object != this.cube){
+          intersects[i].object.scale.set(1.1, 1.1, 1.1);
+        }
       }
     //}        
   }
@@ -185,46 +198,47 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       color: 0xffffff      
     });*/
 
+    this.scene.add(this.cube);
+    this.listSquare.push(this.cube);
 
     let index = 0;
 
     const radius = 4;
-    let r_x = 0;
-    let r_y = 0;
     
 
     let initPosition = (this.jsonList.children.length-1)/2*(-1);
 
     const angulo = 360/this.jsonList.children.length;
 
-    let material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    let material = new THREE.MeshLambertMaterial({ map: loader.load(this.texture), transparent: true });
 
     this.jsonList.children.forEach(element => {
 
-      if( index == 0 ) {
-        material = new THREE.MeshLambertMaterial({ color: 0xff00ff });
-      } else {
-        material = new THREE.MeshLambertMaterial({ color: 0xffffff });
-      }
+      // if( index == 0 ) {
+      //   material = new THREE.MeshLambertMaterial({ color: 0xff00ff });
+      // } else {
+      //   material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      // }
 
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      //const geometry = new THREE.BoxGeometry(1, 1, 0.0001);
       //const geometry = new THREE.PlaneGeometry(1, 1);
+      const geometry = new THREE.CircleGeometry(0.7, 30, 30);
       const square = new THREE.Mesh(geometry, material);
       //square.position.set(initPosition+1*index++, 0, 0);
-      const x = Math.cos(angulo*index*Math.PI/180)*radius;
-      const y = Math.sin(angulo*index*Math.PI/180)*radius;
+      const x = Math.sin(angulo*index*Math.PI/180)*radius;
+      const z = Math.cos(angulo*index*Math.PI/180)*radius;
 
-      square.position.set(x, 0, y);
+      square.position.set(x, 0, z);
       index++;
 
       this.listSquare.push(square);
       this.scene.add(square);
     })
 
-    let light1 = new THREE.PointLight(0xffffff, 1, 100);
-    light1.position.set(10, 10, 10);
-    let light2 = new THREE.PointLight(0xfe9100, 1, 100);
-    light2.position.set(-10, -10, -10);
+    let light1 = new THREE.PointLight(0xffffff, 5, 100);
+    light1.position.set(5, 18, 20);
+    let light2 = new THREE.PointLight(0xfe9100, 5, 100);
+    light2.position.set(-5, -18, -20);
 
     this.scene.add(light1);
     this.scene.add(light2);
@@ -237,10 +251,10 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       this.farClippingPlane
     )
 
-    this.camera.position.set(0, 5, 10);
+    this.camera.position.set(0, 3, 10);
 
     const axesHelper = new THREE.AxesHelper(5);
-    this.scene.add( axesHelper );
+    //this.scene.add( axesHelper );
   }
 
 }
