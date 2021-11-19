@@ -79,9 +79,21 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       {
         "name": "QAE"
       },
-      {
+      /*{
         "name": "Devops"
-      }
+      },
+      {
+        "name": "Devops1"
+      },
+      {
+        "name": "Devops2"
+      },      
+      {
+        "name": "Devops2"
+      },
+      {
+        "name": "Devops2"
+      }*/
     ]
   }
 
@@ -168,21 +180,42 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
     this.scene.background = new THREE.Color(0x000000);
 
     const loader = new THREE.TextureLoader();    
-    const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+    
     /*const material = new THREE.MeshBasicMaterial({
       color: 0xffffff      
     });*/
 
 
     let index = 0;
+
+    const radius = 4;
+    let r_x = 0;
+    let r_y = 0;
+    
+
     let initPosition = (this.jsonList.children.length-1)/2*(-1);
+
+    const angulo = 360/this.jsonList.children.length;
+
+    let material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+
     this.jsonList.children.forEach(element => {
+
+      if( index == 0 ) {
+        material = new THREE.MeshLambertMaterial({ color: 0xff00ff });
+      } else {
+        material = new THREE.MeshLambertMaterial({ color: 0xffffff });
+      }
+
       const geometry = new THREE.BoxGeometry(1, 1, 1);
       //const geometry = new THREE.PlaneGeometry(1, 1);
       const square = new THREE.Mesh(geometry, material);
       //square.position.set(initPosition+1*index++, 0, 0);
-      square.position.set(initPosition, 0, 4);
-      initPosition++;
+      const x = Math.cos(angulo*index*Math.PI/180)*radius;
+      const y = Math.sin(angulo*index*Math.PI/180)*radius;
+
+      square.position.set(x, 0, y);
+      index++;
 
       this.listSquare.push(square);
       this.scene.add(square);
