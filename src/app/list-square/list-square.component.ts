@@ -24,12 +24,11 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
   //-- Cube Properties
   @Input() public rotationSpeedX: number = 0.01;
   @Input() public rotationSpeedY: number = 0.01;
-  @Input() public size: number = 10;
   @Input() public texture: string = "/assets/neonFrame.png";
   @Input() public textureSel: string = "/assets/neonFrameSel.png";
 
   // Stage Properties
-  @Input() public cameraZ: number = 5;
+  @Input() public cameraZ: number = 7;
   @Input() public fieldOfView: number = 50;
   @Input('nearClipping') public nearClippingPlane: number = 1;
   @Input('farClipping') public farClippingPlane: number = 1000;
@@ -169,29 +168,33 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
     this.scene.background = new THREE.Color(0x000000);
 
     const loader = new THREE.TextureLoader();    
-    const material = new THREE.MeshBasicMaterial({ map: loader.load(this.texture), transparent: true});
+    const material = new THREE.MeshLambertMaterial({ color: 0xffffff });
     /*const material = new THREE.MeshBasicMaterial({
       color: 0xffffff      
     });*/
-    const materialSel = new THREE.MeshBasicMaterial({ map: loader.load(this.textureSel), transparent: true});
 
 
     let index = 0;
-    let initPosition = this.jsonList.children.length/2*-1;
+    let initPosition = (this.jsonList.children.length-1)/2*(-1);
     this.jsonList.children.forEach(element => {
-      const geometry = new THREE.BoxGeometry(1, 1, 0.001);
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
       //const geometry = new THREE.PlaneGeometry(1, 1);
       const square = new THREE.Mesh(geometry, material);
-      square.position.set(initPosition+1*index++, 0, 0);
+      //square.position.set(initPosition+1*index++, 0, 0);
+      square.position.set(initPosition, 0, 4);
+      initPosition++;
 
       this.listSquare.push(square);
       this.scene.add(square);
     })
 
     let light1 = new THREE.PointLight(0xffffff, 1, 100);
-    light1.position.set(5, 10, 10);
+    light1.position.set(10, 10, 10);
+    let light2 = new THREE.PointLight(0xfe9100, 1, 100);
+    light2.position.set(-10, -10, -10);
 
     this.scene.add(light1);
+    this.scene.add(light2);
 
     // Camera    
     this.camera = new THREE.PerspectiveCamera(
@@ -201,7 +204,10 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
       this.farClippingPlane
     )
 
-    this.camera.position.z = this.cameraZ;
+    this.camera.position.set(0, 5, 10);
+
+    const axesHelper = new THREE.AxesHelper(5);
+    this.scene.add( axesHelper );
   }
 
 }
