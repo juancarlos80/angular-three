@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CubeComponent } from './cube/cube.component';
 import { ListSquareComponent } from './list-square/list-square.component';
+import { CarouselComponent } from './carousel/carousel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CubeComponent,
-    ListSquareComponent
+    ListSquareComponent,
+    CarouselComponent
   ],
   imports: [
     BrowserModule,
