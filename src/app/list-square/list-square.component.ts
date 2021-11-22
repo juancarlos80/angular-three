@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { Mesh } from 'three';
@@ -44,63 +47,213 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
   private materialCube = new THREE.MeshLambertMaterial({ color: 0x3d3d3d });
   private cube : THREE.Mesh = new THREE.Mesh(this.geometryCube, this.materialCube);
 
+  private manager = new THREE.LoadingManager();
+
   private camera!: THREE.PerspectiveCamera;
 
   private listSquare: Mesh[] = [];
   private jsonList = {
-    "name": "Server",
-    "type": "container",
+    "name": "Container",
     "children": [
-      {
-        "name": "SES",
-        "type": "container",
-        "children": [
-          {
-            "name": "Overlord",
-            "type": "container",
-            "children": [
-              {
-                "name": "Master",
-                "type": "container",
-                "members": [
-                  {
-                    "name": "User1",
-                  },
-                  {
-                    "name": "User2",
-                  },
-                  {
-                    "name": "User3",
-                  }                    
-                ] 
-              }               
-            ]
-          }
-        ]
-      },
-      {
-        "name": "DataB"
-      },
-      {
-        "name": "QAE"
-      },
-      {
-        "name": "Devops"
-      },
-      {
-        "name": "Devops1"
-      },
-      {
-        "name": "Devops2"
-      },      
-      {
-        "name": "Devops2"
-      },
-      {
-        "name": "Devops2"
-      }
+       {
+          "name": "SES",
+          "children": [
+             {
+                "name": "Workspace Overlord",
+                "children": [
+                   {
+                      "name": "Meeting room 1", 
+                      "children": [
+                         {
+                            "name": "Abel", 
+                            "img": "img/abel.jpg"
+                         },
+                         {
+                            "name": "Bayron", 
+                            "img": "img/bayron.jpg"
+                         },
+                         {
+                            "name": "Alanbrito", 
+                            "img": "img/alan.png"
+                         }
+                      ]
+                   },
+                   {
+                      "name": "Meeting room 2"
+                   },
+                   {"name": "Kitchen"},
+                   {"name": "Game room"}
+                ]
+             },
+             {
+                "name": "Workspace Ponctuel",
+                "children": [
+                   {
+                      "name": "BetweennessCentrality", 
+                      "children": [
+                         {
+                            "name": "Foto perfil", 
+                            
+                            "img": "img/profile.png"
+                         }
+                      ]
+                   },
+                   {"name": "LinkDistance"},
+                   {"name": "MaxFlowMinCut"},
+                   {"name": "SpanningTree"}
+                ]
+             },
+             {
+                "name": "Workspace C",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             },
+             {
+                "name": "Workspace D",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             }
+          ]
+       },
+       {
+          "name": "Category 2",
+          "children": [
+             {
+                "name": "Workspace Ponctuel",
+                "children": [
+                   {
+                      "name": "BetweennessCentrality", 
+                      "children": [
+                         {
+                            "name": "Foto perfil", 
+                            
+                            "img": "img/profile.png"
+                         }
+                      ]
+                   },
+                   {"name": "LinkDistance"},
+                   {"name": "MaxFlowMinCut"},
+                   {"name": "SpanningTree"}
+                ]
+             },
+             {
+                "name": "Workspace C",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             },
+             {
+                "name": "Workspace D",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             }
+          ]
+       },
+       {
+          "name": "Category 3",
+          "children": [
+             {
+                "name": "Workspace Overlord",
+                "children": [
+                   {
+                      "name": "Meeting room 1", 
+                      "children": [
+                         {
+                            "name": "Abel", 
+                            
+                            "img": "img/avatar.jpg"
+                         },
+                         {
+                            "name": "Bayron", 
+                            
+                            "img": "img/profile.png"
+                         },
+                         {
+                            "name": "Alanbrito", 
+                            
+                            "img": "img/profile.png"
+                         }
+                      ]
+                   },
+                   {
+                      "name": "Meeting room 2"
+                   },
+                   {"name": "Kitchen"},
+                   {"name": "Game room"}
+                ]
+             },
+             {
+                "name": "Workspace Ponctuel",
+                "children": [
+                   {
+                      "name": "BetweennessCentrality", 
+                      "children": [
+                         {
+                            "name": "Foto perfil", 
+                            
+                            "img": "img/profile.png"
+                         }
+                      ]
+                   },
+                   {"name": "LinkDistance"},
+                   {"name": "MaxFlowMinCut"},
+                   {"name": "SpanningTree"}
+                ]
+             },
+             {
+                "name": "Workspace C",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             },
+             {
+                "name": "Workspace D",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             }
+          ]
+       },
+       {
+          "name": "Category 4",
+          "children": [
+             {
+                "name": "Workspace Ponctuel",
+                "children": [
+                   {
+                      "name": "BetweennessCentrality", 
+                      "children": [
+                         {
+                            "name": "Foto perfil", 
+                            
+                            "img": "img/profile.png"
+                         }
+                      ]
+                   },
+                   {"name": "LinkDistance"},
+                   {"name": "MaxFlowMinCut"},
+                   {"name": "SpanningTree"}
+                ]
+             },
+             {
+                "name": "Workspace C",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             },
+             {
+                "name": "Workspace D",
+                "children": [
+                   {"name": "AspectRatioBanker"}
+                ]
+             }
+          ]
+       }
     ]
-  }
+ }
 
   
 
@@ -148,9 +301,8 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
   };
 
   ngAfterViewInit(): void {
-    this.createScene();
-    this.startRenderingLoop();
-    this.createControls();
+    //this.createScene();
+    this.loaderInit();
   }
 
   @HostListener('document:mousemove', ['$event']) 
@@ -186,9 +338,15 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
     //}        
   }
 
-  private createScene() {
+  public loaderInit() {
+    var fontLoader = new FontLoader(this.manager);
+    fontLoader.load('https://threejs.org/examples/fonts/droid/droid_serif_bold.typeface.json', (response) => {
+      console.log("response", response);
+      this.createScene(response);
+    });
+  }
 
-    // Scene
+  public createScene(font: Font) {  
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
 
@@ -212,7 +370,28 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
 
     let material = new THREE.MeshLambertMaterial({ map: loader.load(this.texture), transparent: true });
 
+    var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+    
+
+    // Scene
+    
     this.jsonList.children.forEach(element => {
+
+      let textGeo = new TextGeometry(element.name, {
+        font: font,
+        size: .1,
+        height: .001,
+        curveSegments: 12,
+        bevelEnabled: false,
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelOffset: 0,
+        bevelSegments: 5
+      });
+
+      console.log(element.name);
+
+      
 
       // if( index == 0 ) {
       //   material = new THREE.MeshLambertMaterial({ color: 0xff00ff });
@@ -222,11 +401,17 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
 
       //const geometry = new THREE.BoxGeometry(1, 1, 0.0001);
       //const geometry = new THREE.PlaneGeometry(1, 1);
+
       const geometry = new THREE.CircleGeometry(0.7, 30, 30);
       const square = new THREE.Mesh(geometry, material);
       //square.position.set(initPosition+1*index++, 0, 0);
       const x = Math.sin(angulo*index*Math.PI/180)*radius;
       const z = Math.cos(angulo*index*Math.PI/180)*radius;
+
+    var mesh = new THREE.Mesh( textGeo, textMaterial );
+    mesh.position.set( x, 0, z );
+
+    this.scene.add( mesh );
 
       square.position.set(x, 0, z);
       index++;
@@ -255,6 +440,9 @@ export class ListSquareComponent implements OnInit, AfterViewInit {
 
     const axesHelper = new THREE.AxesHelper(5);
     //this.scene.add( axesHelper );
+
+    this.startRenderingLoop();
+    this.createControls();
   }
 
 }
